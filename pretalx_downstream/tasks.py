@@ -217,17 +217,17 @@ def _create_talk(*, talk, room, event):
     ):
         code = talk.attrib["code"]
     elif (
+        Submission.objects.filter(
+            code__iexact=talk.attrib["guid"][:13], event=event
+        ).exists()
+        or not Submission.objects.filter(code__iexact=talk.attrib["guid"][:16]).exists()
+    ):
+        code = talk.attrib["guid"][:13]
+    elif (
         Submission.objects.filter(code__iexact=talk.attrib["id"], event=event).exists()
         or not Submission.objects.filter(code__iexact=talk.attrib["id"]).exists()
     ):
         code = talk.attrib["id"]
-    elif (
-        Submission.objects.filter(
-            code__iexact=talk.attrib["guid"][:16], event=event
-        ).exists()
-        or not Submission.objects.filter(code__iexact=talk.attrib["guid"][:16]).exists()
-    ):
-        code = talk.attrib["guid"][:16]
 
     try:
         sub, created = Submission.objects.get_or_create(
