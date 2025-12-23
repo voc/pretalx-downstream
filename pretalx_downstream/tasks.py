@@ -210,9 +210,10 @@ def _create_talk(*, talk, room, event):
         optout = talk.find("recording").find("optout").text == "true"
 
     code = None
-    if (
-        Submission.objects.filter(code__iexact=talk.attrib["code"], event=event).exists()
-        or not Submission.objects.filter(code__iexact=talk.attrib["code"]).exists()
+    upstream_code = talk.attrib.get("code")
+    if (upstream_code and (
+        Submission.objects.filter(code__iexact=upstream_code, event=event).exists()
+        or not Submission.objects.filter(code__iexact=upstream_code).exists())
     ):
         code = talk.attrib["code"]
     elif (
