@@ -211,6 +211,11 @@ def _create_talk(*, talk, room, event):
 
     code = None
     if (
+        Submission.objects.filter(code__iexact=talk.attrib["code"], event=event).exists()
+        or not Submission.objects.filter(code__iexact=talk.attrib["code"]).exists()
+    ):
+        code = talk.attrib["code"]
+    elif (
         Submission.objects.filter(code__iexact=talk.attrib["id"], event=event).exists()
         or not Submission.objects.filter(code__iexact=talk.attrib["id"]).exists()
     ):
